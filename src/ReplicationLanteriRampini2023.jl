@@ -1,5 +1,5 @@
 module ReplicationLanteriRampini2023
 
-# Write your package code here.
+# Write your package code here
 
 end
