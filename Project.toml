@@ -1,0 +1,13 @@
+name = "ReplicationLanteriRampini2023"
+uuid = "31093d04-fbc7-4e8d-a59f-7ce660d72415"
+authors = ["alexgrlt <98583667+alexgrlt@users.noreply.github.com> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1.8"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
