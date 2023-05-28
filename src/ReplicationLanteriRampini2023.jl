@@ -1,8 +1,7 @@
 module ReplicationLanteriRampini2023
-"""
+#="""
 Remark: This module uses the following packages: Distributions, NLsolve, Optim, QuantEcon, MAT, ForwardDiff, Plots. 
-
-"""
+"""=#
 using Distributions, NLsolve, Optim, QuantEcon, MAT, ForwardDiff, Plots
 
 # include a function implementing Rouwenhorst's algorithm to discretize an AR process
