@@ -327,7 +327,7 @@ kU_fb = ones(w_n,1).*kU_fb
 k_fb = ones(w_n,1).*k_fb
 
 """
-    Finally, we simply plot paths followed by new capital values, old capital values and capital in the first-best situation.
+Finally, we simply plot paths followed by new capital values, old capital values and capital in the first-best situation.
 """
 
 
