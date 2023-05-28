@@ -1,3 +1,6 @@
+"""
+
+"""
 function fb_dyn_unc(xx::Array{Float64}, Par, Fun::Dict, q::Real, m::Real)
     
     # Gives the first-order conditions for the optimal allocation of capital.
