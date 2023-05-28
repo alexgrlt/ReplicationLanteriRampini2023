@@ -1,3 +1,9 @@
+"""
+Discretization method for a AR(1) process of the form ``z_{t+1} = \mu + \rho z_{t} + u_t`` where `` u_t \sim \mathcal{N}(0, \sigma)``
+    rowen(N:: number nodes, μ:: mean of the process, σ:: sd of the innovation, ρ:: persistence)
+
+Returns a tuple with the discretized grid for the realizations of the shock Z (a vector of size N), and its transition matrix (size NxN). 
+"""
 function rouwen(N,μ,σ,ρ)
     
     σz = σ / sqrt(1-ρ^2)
