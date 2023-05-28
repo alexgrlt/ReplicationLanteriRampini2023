@@ -1,7 +1,5 @@
 module ReplicationLanteriRampini2023
-#="""
-Remark: This module uses the following packages: Distributions, NLsolve, Optim, QuantEcon, MAT, ForwardDiff, Plots. 
-"""=#
+
 using Distributions, NLsolve, Optim, QuantEcon, MAT, ForwardDiff, Plots
 
 # include a function implementing Rouwenhorst's algorithm to discretize an AR process
@@ -26,10 +24,10 @@ We build a structure with the parameters given as inputs for the model.
     - s_grid: grid for the idiosyncratic productivity shock s 
     - Ps: probability transition matrix (will follow form Rouwenhorst method)
     - w0: initial net worth for new entrants
-    - a: 
-    - ϵ
-    - χ0
-    - χ1
+    - a: elasticity of output with respect to capital
+    - ϵ: CES elasticity of substitution
+    - χ0: Cost of raising equity parameters
+    - χ1: Cost of raising equity parameters
 
 """
 # Input parameters of the model
@@ -83,6 +81,24 @@ end
 
 Par = Parameters(A, β, ρ, α, θ, δ_n, δ_u, γ, ρ_s, σ_s, s_grid, Ps, w0, a, ϵ, χ0, χ1)
 
+"""
+Then, we define a set of functions based on these parameters.
+    - f(k) = Par.A * k^(Par.α) : this is a standard production function. It takes one input (capital stock k) and uses two of the parameters (the technology
+    parameter A and the capital share of the production function α to compute the production output)
+    - fk(k) = Par.α * Par.A * k^(Par.α - 1): this is the first derivative of the production function, with respect to the capital stock 
+    which is the only input of the production function
+    - fkk(k) = Par.α * Par.A * (Par.α - 1) * k^(Par.α - 2): second derivative of the production function with repect to the capital stock
+    - fkinv(fk) = (fk / (Par.α * Par.A))^(1 / (Par.α - 1)) : inverse of the derivative function, useful for policy function iteration, the ouput is the
+    capital stock 
+    - g0(k_n, k_o) = Par.a^(1 / Par.ϵ) * k_n .^((Par.ϵ - 1) / Par.ϵ) + (1 - Par.a)^(1 / Par.ϵ) * (Par.γ .* k_o) .^((Par.ϵ - 1) / Par.ϵ):
+    computes the constant elasticity of substitution bundle for new and old capital for the production function with stocks of old and new capital as inputs
+    - g(k_n, k_o) = g0(k_n, k_o) .^(Par.ϵ / (Par.ϵ - 1)) : this is the policy function which is an investment decision. Taking as inputs the old and new capital
+    stocks, it gives as output the optimal amount of new capital to purchase at the next period
+    - gn(k_n, k_o) = Par.a^(1 / Par.ϵ) * k_n .^((Par.ϵ - 1) / Par.ϵ - 1) * g0(k_n, k_o) .^(Par.ϵ / (Par.ϵ - 1) - 1) : 
+    this is the derivative of the policy function with repect to the new capital, i.e. the marginal effect of investing in new capital on total capital in production
+    - go(k_n, k_o) = Par.γ * (1 - Par.a)^(1 / Par.ϵ) * (Par.γ * k_o) .^((Par.ϵ - 1) / Par.ϵ - 1) * g0(k_n, k_o) .^(Par.ϵ / (Par.ϵ - 1) - 1):
+    this is the derivative of the policy function with repect to the old capital, i.e. the marginal effect of investing in old capital on total capital in production
+"""
 
 # Create functions based on the parameters
 f(k) = Par.A * k^(Par.α) # production function
@@ -97,6 +113,22 @@ g(k_n, k_o) = g0(k_n, k_o) .^(Par.ϵ / (Par.ϵ - 1)) # policy function for capit
 # marginal effect of investment in new and old capital on total capital in production
 gn(k_n, k_o) = Par.a^(1 / Par.ϵ) * k_n .^((Par.ϵ - 1) / Par.ϵ - 1) * g0(k_n, k_o) .^(Par.ϵ / (Par.ϵ - 1) - 1) 
 go(k_n, k_o) = Par.γ * (1 - Par.a)^(1 / Par.ϵ) * (Par.γ * k_o) .^((Par.ϵ - 1) / Par.ϵ - 1) * g0(k_n, k_o) .^(Par.ϵ / (Par.ϵ - 1) - 1)
+
+"""
+We build a dictionary that contains both functions that we previously built and the parameters that enter these functions
+Fun = Dict(
+    :g0 => g0,
+    :f => f,
+    :fk => fk,
+    :fkk => fkk,
+    :ϵ => Par.ϵ,
+    :a => Par.a,
+    :γ => Par.γ,
+    :g => g,
+    :gn => gn,
+    :go => go
+)
+"""
 
 # Create dictionary for the functions
 Fun = Dict(
@@ -115,6 +147,23 @@ Fun = Dict(
 # init parameters with same values as authors (fastens the convergence process)
 vars = matread("cali_ce.mat") ##need to "open folder" in visual studio and then choose "SANDBOX"
 
+
+"""
+We define a new set of parameters:
+ξ_grid1 : only useful for the competitive equilibrium
+ξpr_grid0 : only useful for the competitive equilibrium
+kU : matrix that gives values of old capital on the path to first best
+kN : matrix that gives values of new capital on the path to first best
+qstar : first-best valuation of old capital  
+damp : dampening parameter 
+diff_ξ : only useful for the competitive equilibrium
+tol_ξ : tolerance level when looking for the optimal price
+tol_q : tolerance level when looking for the optimal price
+maxiter_ξ : only useful for the competitive equilibrium
+maxiter_q : maximum number of iterations when computing the optimal price
+"""
+
+
 # Add some explanations here
 ξ_grid1 = zeros(w_n, 2)
 ξpr_grid0 = zeros(w_n, 2, 2) 
@@ -128,12 +177,34 @@ tol_q = 1e-4
 maxiter_ξ = 100
 maxiter_q = 1000
 
+"""
+We define a new set of parameters which will be our initial parameters, these are the one used originally by the authors of the paper as these parameters
+fasten convergence:
+q0 = vars[:"q_fb"]
+kU0 = vars[:"kU_fb"]
+kN0 = vars[:"kN_fb"]
+kU = kU0
+kN = kN0
+"""
+
 # init values at first best if ones wants faster convergence
 q0 = vars[:"q_fb"]
 kU0 = vars[:"kU_fb"]
 kN0 = vars[:"kN_fb"]
 kU = kU0
 kN = kN0
+
+"""
+We set these parameters at their initial value before running the loop around prices to find optimal prices
+xd : will be the distance
+iter_q : will defini the number of iterations already done inside the loop
+q1 : initial minimum price value
+q2 : initial maximum price value
+kN_fb : vector of new capital values. We do not understand why there are two columns but reproduced the set-up proposed by the authors
+kU_fb : vector of old capital values. We do not understand why there are two columns but reproduced the set-up proposed by the authors
+q_vec : initital price vector for old capital, will give the vector of prices for old capital obtained through the iteration loop
+q3 : init price value
+"""
 
 
 ### Compute First Best
@@ -146,10 +217,30 @@ kU_fb = kU0[1, 1] * ones(1,2)
 q_vec = [] # init price vector for old capital
 q3 = 0 # init price value
 
-
-
 # loop around prices to find optimal price
 iter_q =0
+
+"""
+This loop aims to find the optimal price for old capital using policy function iteration. 
+The idea is to find the price such as demand and supply for the old capital are equal.
+To obtain such values, we use the getDS_shocks_fb function from the Policy_Func_Iterations file.
+
+First, we compute the difference between demand and supply of old capital for both the lowest possible price value (q1) and the highest one (q2).
+The differences in these situations will be called respectively xd1 and xd2.
+Then, we will want to know towards which direction price should move. Indeed, if the difference is different from 0, there is no clearing between and supply
+and either the prices are too high or too low. 
+This is why we then build a new price q3 as a function of q1 and q2 and the differences obtained in each situation. This is built such as the price that
+appears as clearing the most the market has a more important role in building q3.
+
+If the difference is the same in both cases (xd1=xd2), we just set q3 a bit below q1 as we cannot infer anything in such a situation.
+Otherwise, we apply a specific formula for q3 as mentioned before.
+Then, we compute demand and supply for this new value. If the difference xd3 is positive, it means demand and too high and prices were too low, then this is q1
+that will be changed by q3, i.e. we increase the lowest possible price. Conversly, if this is negative, demand is too low (or supply too high) and we simply diminish the highest possible price by
+replacing q2 by q3.
+However, if xd (which takes the value of xd3 at each period) reaches a low enough value, we consider that we have become close enough to the true price 
+of the first best and stop the loop.
+
+"""
 
 while (iter_q < maxiter_q) && (maximum(abs.(xd)) > tol_q)
     
@@ -198,6 +289,13 @@ while (iter_q < maxiter_q) && (maximum(abs.(xd)) > tol_q)
     push!(q_vec, q3)
 end
 
+"""
+    We then compute some specific values such as the total capital at first best and the subsequent output in the economy.
+    All the subsequent computations do not really matter in our situation, as we are in the first-best situation and that there are not different "states"
+    at which values such as capital would differ.
+"""
+
+
 # init total capital at first Best
 k_fb  = ones(1,s_n)
 k_fb[:,1] = g(kN_fb[:,1], kU_fb[:,1])
@@ -205,8 +303,6 @@ k_fb[:,2] = g(kN_fb[:,2], kU_fb[:,2])
 
 # output at first best
 Y_fb = (.5*(Ps[1,1]*s_grid[1] + Ps[1,2]*s_grid[2])*f(k_fb[1,1]) +   .5*(Ps[2,1]*s_grid[1] + Ps[2,2]*s_grid[2])*f(k_fb[1,2]))
-
-
 
 
 KN_fb = .5*kN_fb[1,1] +  .5*kN_fb[1,2]
@@ -229,6 +325,11 @@ mpk_sd_fb  =( .5*Ps[1,1]*(log(s_grid[1]*fk_1) - mpk_mean_fb).^2 + .5*Ps[1,2]*(lo
 kN_fb = ones(w_n,1).*kN_fb
 kU_fb = ones(w_n,1).*kU_fb
 k_fb = ones(w_n,1).*k_fb
+
+"""
+    Finally, we simply plot paths followed by new capital values, old capital values and capital in the first-best situation.
+"""
+
 
 # Plot for capital both old and new
 l = @layout [a;b ;  c]
