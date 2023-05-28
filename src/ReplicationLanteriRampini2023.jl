@@ -1,6 +1,8 @@
 module ReplicationLanteriRampini2023
+"""
+Remark: This module uses the following packages: Distributions, NLsolve, Optim, QuantEcon, MAT, ForwardDiff, Plots. 
 
-
+"""
 using Distributions, NLsolve, Optim, QuantEcon, MAT, ForwardDiff, Plots
 
 # include a function implementing Rouwenhorst's algorithm to discretize an AR process
@@ -10,7 +12,27 @@ include("rouwen.jl")
 include("Policy_Func_Iterations.jl")
 
 
+"""
+We build a structure with the parameters given as inputs for the model.
+    - A: technology/productivity parameter on the production function 
+    - β: discount rate 
+    - ρ: exit probability
+    - α: curvature of the production function (power on capital stock) 
+    - θ: collaterazibility (if θ=0 there is no borrowing in the economy)
+    - δ_n: depreciation rate of new capital
+    - δ_u: depreciation rate of old capital
+    - γ: measure of first cohort of firms entering the economy
+    - ρ_s: persistence idiosyncratic productivity shock s ~ AR(1)
+    - σ_s: standard deviation innovation of the idiosyncratic productivity shock s
+    - s_grid: grid for the idiosyncratic productivity shock s 
+    - Ps: probability transition matrix (will follow form Rouwenhorst method)
+    - w0: initial net worth for new entrants
+    - a: 
+    - ϵ
+    - χ0
+    - χ1
 
+"""
 # Input parameters of the model
 const A = 1 # productivity component in production function (we will not use it; only needed if one wants to slightly modify our function)
 const β = 0.96 # discount factor
