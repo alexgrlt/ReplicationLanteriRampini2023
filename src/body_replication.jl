@@ -58,11 +58,11 @@ using Distributions, NLsolve, Optim, QuantEcon, Plots
     include("Policy_Func_Iterations.jl")
 
 
-    """
+    @doc raw"""
     We build a structure with the parameters given as inputs for the model.
         - A: technology/productivity parameter on the production function 
         - β: discount rate 
-        - ρ: exit probability
+        - ``\rho``: exit probability
         - α: curvature of the production function (power on capital stock) 
         - θ: collaterazibility (if θ=0 there is no borrowing in the economy)
         - δ_n: depreciation rate of new capital
