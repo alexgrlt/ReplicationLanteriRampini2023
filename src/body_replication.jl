@@ -59,112 +59,112 @@ using Distributions, NLsolve, Optim, QuantEcon, Plots
 
 
     @doc raw"""
-        This offers a precise documentation of the function run_model() by describing step by step what happens when someone runs the function.
+    This offers a precise documentation of the function run_model() by describing step by step what happens when someone runs the function.
 
-        First, We build a structure with the following parameters given as inputs for the model.
-            A: technology/productivity parameter on the production function 
-             ``\beta``: discount rate 
-             ``\rho``: exit probability
-             ``\alpha``: curvature of the production function (power on capital stock) 
-             ``\theta``: collaterazibility (if θ=0 there is no borrowing in the economy)
-             ``\delta_n``: depreciation rate of new capital
-             ``\delta_u``: depreciation rate of old capital
-             ``\gamma``: measure of first cohort of firms entering the economy
-             ``\rho_s``: persistence idiosyncratic productivity shock s ~ AR(1)
-             ``\sigma_s``: standard deviation innovation of the idiosyncratic productivity shock s
-             s_grid: grid for the idiosyncratic productivity shock s 
-             Ps: probability transition matrix (will follow form Rouwenhorst method)
-             w0: initial net worth for new entrants
-             a: elasticity of output with respect to capital
-             ``\epsilon``: CES elasticity of substitution
-             ``\chi0``: Cost of raising equity parameters
-             ``\chi1``: Cost of raising equity parameters
+    First, We build a structure with the following parameters given as inputs for the model.
+        A: technology/productivity parameter on the production function 
+         ``β``: discount rate 
+         ``ρ``: exit probability
+         ``α``: curvature of the production function (power on capital stock) 
+         ``θ``: collaterazibility (if θ=0 there is no borrowing in the economy)
+         ``δ_n``: depreciation rate of new capital
+         ``δ_u``: depreciation rate of old capital
+         ``γ``: measure of first cohort of firms entering the economy
+         ``ρ_s``: persistence idiosyncratic productivity shock s ~ AR(1)
+         ``σ _s``: standard deviation innovation of the idiosyncratic productivity shock s
+         s_grid: grid for the idiosyncratic productivity shock s 
+         Ps: probability transition matrix (will follow form Rouwenhorst method)
+         w0: initial net worth for new entrants
+         a: elasticity of output with respect to capital
+         ``ϵ``: CES elasticity of substitution
+         ``χ0``: Cost of raising equity parameters
+         ``χ1``: Cost of raising equity parameters
 
-        Then, we define a set of functions based on these parameters.
-        - ``f(k) = Par.A * k^(Par.\alpha)`` : this is a standard production function. It takes one input (capital stock k) and uses two of the parameters (the technology
-        parameter A and the capital share of the production function ``\alpha`` to compute the production output)
-        - ``fk(k) = Par.\alpha * Par.A * k^(Par.\alpha - 1)``: this is the first derivative of the production function, with respect to the capital stock 
-        which is the only input of the production function
-        - ``fkk(k) = Par.\alpha * Par.A * (Par.\alpha - 1) * k^(Par.\alpha - 2)``: second derivative of the production function with repect to the capital stock
-        - ``fkinv(fk) = (fk / (Par.\alpha * Par.A))^(1 / (Par.\alpha - 1))`` : inverse of the derivative function, useful for policy function iteration, the ouput is the
-        capital stock 
-        - ``g0(k_n, k_o) = Par.a^(1 / Par.\epsilon) * k_n .^((Par.\epsilon - 1) / Par.\epsilon) + (1 - Par.a)^(1 / Par.\epsilon) * (Par.\gamma .* k_o) .^((Par.\epsilon - 1) / Par.\epsilon):``
-        computes the constant elasticity of substitution bundle for new and old capital for the production function with stocks of old and new capital as inputs
-        - ``g(k_n, k_o) = g0(k_n, k_o) .^(Par.\epsilon / (Par.\epsilon - 1))`` : this is the policy function which is an investment decision. Taking as inputs the old and new capital
-        stocks, it gives as output the optimal amount of new capital to purchase at the next period
-        - gn(k_n, k_o) = Par.a^(1 / Par.\epsilon) * k_n .^((Par.\epsilon - 1) / Par.\epsilon - 1) * g0(k_n, k_o) .^(Par.\epsilon / (Par.\epsilon - 1) - 1) : 
-        this is the derivative of the policy function with repect to the new capital, i.e. the marginal effect of investing in new capital on total capital in production
-        - ``go(k_n, k_o) = Par.\gamma * (1 - Par.a)^(1 / Par.\epsilon) * (Par.\gamma * k_o) .^((Par.\epsilon - 1) / Par.\epsilon - 1) * g0(k_n, k_o) .^(Par.\epsilon / (Par.\epsilon - 1) - 1)``:
-        this is the derivative of the policy function with repect to the old capital, i.e. the marginal effect of investing in old capital on total capital in production
+    Then, we define a set of functions based on these parameters.
+    - ``f(k) = Par.A * k^(Par.α)`` : this is a standard production function. It takes one input (capital stock k) and uses two of the parameters (the technology
+    parameter A and the capital share of the production function ``\alpha`` to compute the production output)
+    - ``fk(k) = Par.α * Par.A * k^(Par.α - 1)``: this is the first derivative of the production function, with respect to the capital stock 
+    which is the only input of the production function
+    - ``fkk(k) = Par.α * Par.A * (Par.α - 1) * k^(Par.α - 2)``: second derivative of the production function with repect to the capital stock
+    - ``fkinv(fk) = (fk / (Par.α * Par.A))^(1 / (Par.α - 1))`` : inverse of the derivative function, useful for policy function iteration, the ouput is the
+    capital stock 
+    - ``g0(k_n, k_o) = Par.a^(1 / Par.α) * k_n .^((Par.ϵ - 1) / Par.ϵ) + (1 - Par.a)^(1 / Par.ϵ) * (Par.γ .* k_o) .^((Par.ϵ - 1) / Par.ϵ):``
+    computes the constant elasticity of substitution bundle for new and old capital for the production function with stocks of old and new capital as inputs
+    - ``g(k_n, k_o) = g0(k_n, k_o) .^(Par.ϵ / (Par.ϵ - 1))`` : this is the policy function which is an investment decision. Taking as inputs the old and new capital
+    stocks, it gives as output the optimal amount of new capital to purchase at the next period
+    - gn(k_n, k_o) = Par.a^(1 / Par.ϵ) * k_n .^((Par.ϵ - 1) / Par.ϵ - 1) * g0(k_n, k_o) .^(Par.ϵ / (Par.ϵ - 1) - 1) : 
+    this is the derivative of the policy function with repect to the new capital, i.e. the marginal effect of investing in new capital on total capital in production
+    - ``go(k_n, k_o) = Par.γ * (1 - Par.a)^(1 / Par.ϵ) * (Par.γ * k_o) .^((Par.ϵ - 1) / Par.ϵ - 1) * g0(k_n, k_o) .^(Par.ϵ / (Par.ϵ - 1) - 1)``:
+    this is the derivative of the policy function with repect to the old capital, i.e. the marginal effect of investing in old capital on total capital in production
 
-        We build a dictionary that contains both functions that we previously built and the parameters that enter these functions
-        Fun = Dict(
-                :g0 => g0,
-                :f => f,
-                :fk => fk,
-                :fkk => fkk,
-                :``\epsilon => Par.\espilon``,
-                :a => Par.a,
-                :``\gamma => Par.\gamma``,
-                :g => g,
-                :gn => gn,
-                :go => go
-            )
+    We build a dictionary that contains both functions that we previously built and the parameters that enter these functions
+    Fun = Dict(
+            :g0 => g0,
+            :f => f,
+            :fk => fk,
+            :fkk => fkk,
+            :``ϵ => Par.ϵ``,
+            :a => Par.a,
+            :``γ => Par.γ``,
+            :g => g,
+            :gn => gn,
+            :go => go
+        )
 
-            Then,  new parameters:
-            ``\xi_grid1`` : only useful for the competitive equilibrium
-            ``\xipr_grid0`` : only useful for the competitive equilibrium
-            kU : matrix that gives values of old capital on the path to first best
-            kN : matrix that gives values of new capital on the path to first best
-            qstar : first-best valuation of old capital  
-            damp : dampening parameter 
-            ``diff_\xi`` : only useful for the competitive equilibrium
-            ``tol_\xi`` : tolerance level when looking for the optimal price
-            tol_q : tolerance level when looking for the optimal price
-            ``maxiter_\xi`` : only useful for the competitive equilibrium
-            maxiter_q : maximum number of iterations when computing the optimal price
+        Then,  new parameters:
+        ``ξ_grid1`` : only useful for the competitive equilibrium
+        ``ξpr_grid0`` : only useful for the competitive equilibrium
+        kU : matrix that gives values of old capital on the path to first best
+        kN : matrix that gives values of new capital on the path to first best
+        qstar : first-best valuation of old capital  
+        damp : dampening parameter 
+        ``diff_ξ`` : only useful for the competitive equilibrium
+        ``tol_ξ`` : tolerance level when looking for the optimal price
+        tol_q : tolerance level when looking for the optimal price
+        ``maxiter_ξ`` : only useful for the competitive equilibrium
+        maxiter_q : maximum number of iterations when computing the optimal price
 
-            Again, we define a new set of parameters which will be our initial parameters, these are the one used originally by the authors of the paper as these parameters
-            fasten convergence:
-            q0 = 0.54
-            kU0 = ones(50,2) .* [16 29]
-            kN0 = ones(50,2) .* [16 29]
-            kU = kU0
-            kN = kN0
+        Again, we define a new set of parameters which will be our initial parameters, these are the one used originally by the authors of the paper as these parameters
+        fasten convergence:
+        q0 = 0.54
+        kU0 = ones(50,2) .* [16 29]
+        kN0 = ones(50,2) .* [16 29]
+        kU = kU0
+        kN = kN0
 
-        Finally, we set these parameters at their initial value before running the loop around prices to find optimal prices
-                xd : will be the distance
-                iter_q : will defini the number of iterations already done inside the loop
-                q1 : initial minimum price value
-                q2 : initial maximum price value
-                kN_fb : vector of new capital values. There are two colums to signify the levels with each realization of the idiosyncratic shock.
-                kU_fb : vector of old capital values where (again) each column represent the realizations of the shock. 
-                q_vec : initital price vector for old capital, will give the vector of prices for old capital obtained through the iteration loop
-                q3 : init price value
+    Finally, we set these parameters at their initial value before running the loop around prices to find optimal prices
+            xd : will be the distance
+            iter_q : will defini the number of iterations already done inside the loop
+            q1 : initial minimum price value
+            q2 : initial maximum price value
+            kN_fb : vector of new capital values. There are two colums to signify the levels with each realization of the idiosyncratic shock.
+            kU_fb : vector of old capital values where (again) each column represent the realizations of the shock. 
+            q_vec : initital price vector for old capital, will give the vector of prices for old capital obtained through the iteration loop
+            q3 : init price value
 
-        The loop aims to find the optimal price for old capital using policy function iteration. 
-        The idea is to find the price such as demand and supply for the old capital are equal.
-        To obtain such values, we use the getDS_shocks_fb function from the Policy_Func_Iterations file.
-    
-        First, we compute the difference between demand and supply of old capital for both the lowest possible price value (q1) and the highest one (q2).
-        The differences in these situations will be called respectively xd1 and xd2.
-        Then, we will want to know towards which direction price should move. Indeed, if the difference is different from 0, there is no clearing between and supply
-        and either the prices are too high or too low. 
-        This is why we then build a new price q3 as a function of q1 and q2 and the differences obtained in each situation. This is built such as the price that
-        appears as clearing the most the market has a more important role in building q3.
-    
-        If the difference is the same in both cases (xd1=xd2), we just set q3 a bit below q1 as we cannot infer anything in such a situation.
-        Otherwise, we apply a specific formula for q3 as mentioned before.
-        Then, we compute demand and supply for this new value. If the difference xd3 is positive, it means demand and too high and prices were too low, then this is q1
-        that will be changed by q3, i.e. we increase the lowest possible price. Conversly, if this is negative, demand is too low (or supply too high) and we simply diminish the highest possible price by
-        replacing q2 by q3.
-        However, if xd (which takes the value of xd3 at each period) reaches a low enough value, we consider that we have become close enough to the true price 
-        of the first best and stop the loop.
+    The loop aims to find the optimal price for old capital using policy function iteration. 
+    The idea is to find the price such as demand and supply for the old capital are equal.
+    To obtain such values, we use the getDS_shocks_fb function from the Policy_Func_Iterations file.
 
-        Finally, we compute some specific values such as the total capital at first best and the subsequent output in the economy.
-        All the subsequent computations do not really matter in our situation, as we are in the first-best situation and that there are not different "states"
-        at which values such as capital would differ.
-    """
+    First, we compute the difference between demand and supply of old capital for both the lowest possible price value (q1) and the highest one (q2).
+    The differences in these situations will be called respectively xd1 and xd2.
+    Then, we will want to know towards which direction price should move. Indeed, if the difference is different from 0, there is no clearing between and supply
+    and either the prices are too high or too low. 
+    This is why we then build a new price q3 as a function of q1 and q2 and the differences obtained in each situation. This is built such as the price that
+    appears as clearing the most the market has a more important role in building q3.
+
+    If the difference is the same in both cases (xd1=xd2), we just set q3 a bit below q1 as we cannot infer anything in such a situation.
+    Otherwise, we apply a specific formula for q3 as mentioned before.
+    Then, we compute demand and supply for this new value. If the difference xd3 is positive, it means demand and too high and prices were too low, then this is q1
+    that will be changed by q3, i.e. we increase the lowest possible price. Conversly, if this is negative, demand is too low (or supply too high) and we simply diminish the highest possible price by
+    replacing q2 by q3.
+    However, if xd (which takes the value of xd3 at each period) reaches a low enough value, we consider that we have become close enough to the true price 
+    of the first best and stop the loop.
+
+    Finally, we compute some specific values such as the total capital at first best and the subsequent output in the economy.
+    All the subsequent computations do not really matter in our situation, as we are in the first-best situation and that there are not different "states"
+    at which values such as capital would differ.
+"""
 function run_model()
     
 
