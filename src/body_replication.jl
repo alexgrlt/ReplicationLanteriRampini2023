@@ -57,7 +57,6 @@ using Distributions, NLsolve, Optim, QuantEcon, Plots
     # include functions that proceeds to policy function iterations
     include("Policy_Func_Iterations.jl")
 
-function run_model()
 
     """
     We build a structure with the parameters given as inputs for the model.
@@ -78,9 +77,8 @@ function run_model()
         - ϵ: CES elasticity of substitution
         - χ0: Cost of raising equity parameters
         - χ1: Cost of raising equity parameters
-
     """
-
+function run_model()
     
 
     w_grid = range(w0,w_max,w_n) # for further plots
