@@ -145,7 +145,7 @@ Fun = Dict(
 )
 
 # init parameters with same values as authors (fastens the convergence process)
-vars = matread("cali_ce.mat") ##need to "open folder" in visual studio and then choose "SANDBOX"
+vars = matread("src/cali_ce.mat") ##need to "open folder" in visual studio and then choose "SANDBOX"
 
 
 """
