@@ -4,8 +4,6 @@ Discretization method for a AR(1) process of the form ``z_{t+1} = \mu + \rho z_{
 N must be an integer and all other inputs are Floats. The paper considers N=2.
 Returns a tuple with the discretized grid for the realizations of the shock ``Z`` (a vector of size N), and its transition matrix ``Π`` (size NxN). 
 """
-
-
 function rouwen(N::Int,μ::Float64,σ::Float64,ρ::Float64)
     
     σz = σ / sqrt(1-ρ^2)
@@ -24,8 +22,6 @@ function rouwen(N::Int,μ::Float64,σ::Float64,ρ::Float64)
     Z  = collect(range(-fi,fi,length=  N))'
     Z  = Z .+ μ
     Z = vec(Z)
-
-
 
     return (Z,Π)
 end
