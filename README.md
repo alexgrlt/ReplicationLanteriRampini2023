@@ -1,5 +1,7 @@
 # ReplicationLanteriRampini2023
-This code replicated the first best results of  "Constrained-Efficient Capital Reallocation" (AER, 2023) by Lanteri and Rampini using Julia. The paper is about understanding better inefficiencies in the new and old capital markets. One of the main insights from the model (unreplicated here) is that the equilibrium price of old capital is too high because distributive externalities (due to financial constraints of buyers of old capital) exceed collateral externalities (due to the effects of the resale price of capital on collateral constraints of firms).
+The package built in this repository replicates the first best results of "Constrained-Efficient Capital Reallocation" (AER, 2023) by Lanteri and Rampini using Julia. 
+
+The paper is about understanding inefficiencies in the new and old capital markets. One of the main insights from the model (unreplicated here -- see failing_code folder under src to find a tentative to replicate it) is that the equilibrium price of old capital is too high because distributive externalities (due to financial constraints of buyers of old capital) exceed collateral externalities (due to the effects of the resale price of capital on collateral constraints of firms).
 
  
 
