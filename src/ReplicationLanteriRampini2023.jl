@@ -5,9 +5,6 @@ using Distributions, NLsolve, Optim, QuantEcon, MAT, ForwardDiff, Plots
 # include a function implementing Rouwenhorst's algorithm to discretize an AR process
 include("rouwen.jl")
 
-# include functions that proceeds to policy function iterations
-include("Policy_Func_Iterations.jl")
-
 
 """
 We build a structure with the parameters given as inputs for the model.
@@ -56,7 +53,7 @@ const Ps = P_temp
 const a = 0.5 # elasticity of output with respect to capital
 const ϵ = 5.0 # CES elasticity of substitution
 
-global w_grid = range(w0,w_max,w_n) # for further plots
+w_grid = range(w0,w_max,w_n) # for further plots
 
 # Structure the parameters
 struct Parameters
@@ -80,6 +77,9 @@ struct Parameters
 end
 
 Par = Parameters(A, β, ρ, α, θ, δ_n, δ_u, γ, ρ_s, σ_s, s_grid, Ps, w0, a, ϵ, χ0, χ1)
+
+# include functions that proceeds to policy function iterations
+include("Policy_Func_Iterations.jl")
 
 """
 Then, we define a set of functions based on these parameters.
@@ -145,8 +145,8 @@ Fun = Dict(
 )
 
 # init parameters with same values as authors (fastens the convergence process)
-vars = matread("src/cali_ce.mat") ##need to "open folder" in visual studio and then choose "SANDBOX"
-
+#cd("C:/Users/repo_path/src")
+vars = matread("cali_ce.mat") 
 
 """
 We define a new set of parameters:
@@ -217,9 +217,6 @@ kU_fb = kU0[1, 1] * ones(1,2)
 q_vec = [] # init price vector for old capital
 q3 = 0 # init price value
 
-# loop around prices to find optimal price
-iter_q =0
-
 """
 This loop aims to find the optimal price for old capital using policy function iteration. 
 The idea is to find the price such as demand and supply for the old capital are equal.
@@ -242,6 +239,8 @@ of the first best and stop the loop.
 
 """
 
+# loop around prices to find optimal price
+iter_q =0
 while (iter_q < maxiter_q) && (maximum(abs.(xd)) > tol_q)
     
     iter_q += 1

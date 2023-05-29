@@ -34,7 +34,7 @@ Its arguments are: Ps, the transition matrix of the idiosyncratic shock found us
 It returns a tuple with the demand and the supply of old capital. 
 
 """
-function getDS_shocks_fb(Ps::Matrix,s_grid::Matrix, kN_fb::Array,kU_fb::Array,q0::Number)
+function getDS_shocks_fb(Ps::Matrix,s_grid::Any, kN_fb::Array,kU_fb::Array,q0::Number)
 
     q = q0
 
