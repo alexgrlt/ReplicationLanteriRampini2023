@@ -1,13 +1,21 @@
 using ReplicationLanteriRampini2023
 using Test
 
-@testset "ReplicationLanteriRampini2023.jl" begin
-    # Write your tests here.
+# verify that optimal values are close enough to what they should be
+@testset "Check results model" begin
+    kN_fb, kU_fb, k_fb = ReplicationLanteriRampini2023.run_model()
+    @test isapprox(kN_fb[1,1], 16.0846; rtol=1E-2)
+    @test isapprox(kU_fb[1,1], 16.0846; rtol=1E-2)
+    @test isapprox(kU_fb[1,2], 28.8805; rtol=1E-2)
+    @test isapprox(kN_fb[1,2], 28.8805; rtol=1E-2)
 end
 
-@testset "rouwen.jl"
-begin 
-@test length(Z) == N
-@test length(Π) == N*N
-@test sum(Π, dims=2)[1]
+@testset "test rouwen" begin
+    ρ_s = 0.7 # persistence of schock in AR[1] process modeling idiosyncratic production shock
+    σ_u = 0.12 # standard deviation in AR[1] process 
+    σ_s = σ_u / sqrt(1 - ρ_s^2) # intermediate step to compute the mean of the AR[1] process
+    μ = -0.5 * σ_s^2 # mean of AR[1] process 
+    (Z,Π) = ReplicationLanteriRampini2023.rouwen(2,μ, σ_u, ρ_s)
+    @test length(Z) == 2
+    @test length(Π) == 4
 end 
