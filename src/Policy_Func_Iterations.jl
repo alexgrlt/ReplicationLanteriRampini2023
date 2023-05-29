@@ -29,22 +29,23 @@ end
 
 """
 getDS_shocks_fb(Ps::Matrix,s_grid, kN_fb,kU_fb,q0) 
+This function uses NLsolve to solve for the FOC found with fb_dyn_unc ans deduce the level of old capital supplied and demanded optimally by firms of a given cohort. 
+Its arguments are: Ps, the transition matrix of the idiosyncratic shock found usinf Rouwenhorst method; s_grid, theexponential grid of the shock; kN_fb and kU_fb the levels of new and old capital, and q0 an initial price of capital. 
+It returns a tuple with the demand and the supply of old capital. 
 
 """
-function getDS_shocks_fb(Ps::Matrix,s_grid, kN_fb,kU_fb,q0)
-
-    # Performs fixed-point iteration to solve for the optimal level of capital.
+function getDS_shocks_fb(Ps::Matrix,s_grid::Matrix, kN_fb::Array,kU_fb::Array,q0::Number)
 
     q = q0
 
     # update policy functions for all states of the shock
-    for i_s = 1:s_n
+    for i_s = 1:s_n  ## all states of idiosyncratic shock 
        
         ξ = 0
         
         m_L = s_grid[1] # low-state value
         
-        m_H = s_grid[2] # high-state value
+        m_H = s_grid[2] # high-state value, Rouwenhorst is made with N=2 only
         
         m = Ps[i_s,:]' * [m_L, m_H] # matrix of expected payoffs
         

@@ -200,8 +200,8 @@ xd : will be the distance
 iter_q : will defini the number of iterations already done inside the loop
 q1 : initial minimum price value
 q2 : initial maximum price value
-kN_fb : vector of new capital values. We do not understand why there are two columns but reproduced the set-up proposed by the authors
-kU_fb : vector of old capital values. We do not understand why there are two columns but reproduced the set-up proposed by the authors
+kN_fb : vector of new capital values. There are two colums to signify the levels with each realization of the idiosyncratic shock.
+kU_fb : vector of old capital values where (again) each column represent the realizations of the shock. 
 q_vec : initital price vector for old capital, will give the vector of prices for old capital obtained through the iteration loop
 q3 : init price value
 """
