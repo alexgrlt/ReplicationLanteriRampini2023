@@ -1,5 +1,5 @@
 @doc raw"""
-fb_dyn_unc(xx::Array{Float64}, Par::Parameters, Fun::Dict, q::Real, m::Any)
+fb\_dyn\_unc(xx::Array{Float64}, Par::Parameters, Fun::Dict, q::Real, m::Any)
 
 Returns an array ``zz`` with the first-order conditions for new and old capital at the optimal allocation (see equations 38 and 39 in the paper) that will be used in the policy function iteration. The expression of these FOC is given explicitly as in the Matlab replication files. 
 
@@ -28,7 +28,7 @@ function fb_dyn_unc(xx::Array{Float64}, Par::Parameters, Fun::Dict, q::Real, m::
 end
 
 @doc raw"""
-getDS_shocks_fb(Ps::Matrix,s_grid::Array, kN_fb::Array,kU_fb::Array,q0::Number) 
+getDS\_shocks\_fb(Ps::Matrix,s_grid::Array, kN_fb::Array,kU_fb::Array,q0::Number) 
 
 This function uses NLsolve to solve for the FOC found with ``fb\_dyn\_unc`` and deduce the level of old capital supplied and demanded optimally by firms of a given cohort. 
 
