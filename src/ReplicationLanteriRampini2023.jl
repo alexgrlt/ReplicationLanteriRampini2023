@@ -144,9 +144,6 @@ Fun = Dict(
     :go => go
 )
 
-# init parameters with same values as authors (fastens the convergence process)
-#cd("C:/Users/repo_path/src")
-vars = matread("src/cali_ce.mat") 
 
 """
 We define a new set of parameters:
@@ -180,17 +177,22 @@ maxiter_q = 1000
 """
 We define a new set of parameters which will be our initial parameters, these are the one used originally by the authors of the paper as these parameters
 fasten convergence:
-q0 = vars[:"q_fb"]
-kU0 = vars[:"kU_fb"]
-kN0 = vars[:"kN_fb"]
+q0 = 0.54
+kU0 = ones(50,2) .* [16 29]
+kN0 = ones(50,2) .* [16 29]
 kU = kU0
 kN = kN0
 """
 
 # init values at first best if ones wants faster convergence
-q0 = vars[:"q_fb"]
-kU0 = vars[:"kU_fb"]
-kN0 = vars[:"kN_fb"]
+
+#q0 = vars[:"q_fb"]
+#kU0 = vars[:"kU_fb"]
+#kN0 = vars[:"kN_fb"]
+
+q0 = 0.54
+kU0 = ones(50,2) .* [16 29]
+kN0 = ones(50,2) .* [16 29]
 kU = kU0
 kN = kN0
 
@@ -210,8 +212,8 @@ q3 : init price value
 ### Compute First Best
 xd = 1
 iter_q = 0
-q1 = 0.99 * qstar
-q2 = 1.01 * qstar
+global q1 = 0.99 * qstar
+global q2 = 1.01 * qstar
 kN_fb = kN0[1, 1] * ones(1,2)
 kU_fb = kU0[1, 1] * ones(1,2)
 q_vec = [] # init price vector for old capital
@@ -240,13 +242,15 @@ of the first best and stop the loop.
 """
 
 # loop around prices to find optimal price
-iter_q =0
+
+global iter_q = 0
+
 while (iter_q < maxiter_q) && (maximum(abs.(xd)) > tol_q)
     
-    iter_q += 1
+    global iter_q += 1
 
     # test with lowest possibile price value
-    q0 = q1
+    global q0 = q1
 
     # get optimal level of capital given current parameters values
     (kU_D_unc,kU_S_unc) = getDS_shocks_fb(Ps,s_grid, kN_fb,kU_fb,q0)
@@ -262,13 +266,13 @@ while (iter_q < maxiter_q) && (maximum(abs.(xd)) > tol_q)
     # test whether the distance with highest and lowest price are the same (in which case, we try a bit below but not 
     # far from the lowest value)
     if xd2 == xd1
-        q3 = 0.9999q1
+        global q3 = 0.9999q1
     else
         # otherwise: update price value by setting it to the intercept / slope ratio between  the prices (allows
         # to define a new price closer to the best of the former prices)
         slope = (xd2 - xd1) / (q2 - q1)
         intercept = xd2 - slope * q2
-        q3 = -intercept / slope
+        global q3 = -intercept / slope
     end
 
     # try with this new value
@@ -279,9 +283,9 @@ while (iter_q < maxiter_q) && (maximum(abs.(xd)) > tol_q)
 
     # just update lowest and upper bounds, depending on which one is binding us
     if xd3 > 0
-        q1 = q3
+        global q1 = q3
     else
-        q2 = q3
+        global q2 = q3
     end
     
     # Keep track of the price updates
@@ -334,20 +338,20 @@ Finally, we simply plot paths followed by new capital values, old capital values
 l = @layout [a;b ;  c]
 
 
-p1 = plot(w_grid, kN_fb[:,1], linewidth=2)
-plot!(p1,w_grid, kN_fb[:,2], linewidth=2)
+p1 = plot(w_grid, kN_fb[:,1], linewidth=2, label = "Low-state")
+plot!(p1,w_grid, kN_fb[:,2], linewidth=2, label = "High-state")
 xlabel!(p1,"w")
 ylabel!(p1,"kN")
 
 
-p2 = plot(w_grid, kU_fb[:,1], linewidth=2)
-plot!(p2,w_grid, kU_fb[:,2], linewidth=2)
+p2 = plot(w_grid, kU_fb[:,1], linewidth=2,label = "Low-state")
+plot!(p2,w_grid, kU_fb[:,2], linewidth=2,label = "High-state")
 xlabel!(p2,"w")
 ylabel!(p2,"kU")
 
 
-p3 = plot(w_grid, k_fb[:,1], linewidth=2)
-plot!(p3,w_grid, k_fb[:,2], linewidth=2)
+p3 = plot(w_grid, k_fb[:,1], linewidth=2, label = "Low-state")
+plot!(p3,w_grid, k_fb[:,2], linewidth=2, label = "High-state")
 xlabel!(p3,"w")
 ylabel!(p3,"k")
 
