@@ -1,4 +1,4 @@
-using Distributions, NLsolve, Optim, QuantEcon, MAT, ForwardDiff, Plots
+using Distributions, NLsolve, Optim, QuantEcon, Plots
 
     # include a function implementing Rouwenhorst's algorithm to discretize an AR process
     include("rouwen.jl")
