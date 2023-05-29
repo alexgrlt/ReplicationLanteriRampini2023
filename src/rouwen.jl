@@ -1,4 +1,4 @@
-"""
+@doc raw"""
 Discretization method for a AR(1) process of the form ``z_{t+1} = \mu + \rho z_{t} + u_t`` where ``u_t \sim \mathcal{N}(0, \sigma)``
 It must be defined as:  rouwen(N:: number nodes, ``\mu``:: mean of the process, ``\sigma``:: sd of the innovation, ``\rho``:: persistence).
 N must be an integer and all other inputs are Floats. The paper considers N=2.
