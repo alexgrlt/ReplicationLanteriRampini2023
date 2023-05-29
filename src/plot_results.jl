@@ -1,5 +1,5 @@
-"""
-This function plots the results of the model if one wants.
+@doc raw"""
+Given the values found in the main function from this package (`run_model()`), this function outputs plots showing the values of old and new capital, as well as their combination.
 """
 function plot_results()
 

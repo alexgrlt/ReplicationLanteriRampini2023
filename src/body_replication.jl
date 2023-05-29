@@ -63,38 +63,38 @@ using Distributions, NLsolve, Optim, QuantEcon, Plots
 
     First, We build a structure with the following parameters given as inputs for the model.
         A: technology/productivity parameter on the production function 
-         ``β``: discount rate 
-         ``ρ``: exit probability
-         ``α``: curvature of the production function (power on capital stock) 
-         ``θ``: collaterazibility (if θ=0 there is no borrowing in the economy)
-         ``δ_n``: depreciation rate of new capital
-         ``δ_u``: depreciation rate of old capital
-         ``γ``: measure of first cohort of firms entering the economy
-         ``ρ_s``: persistence idiosyncratic productivity shock s ~ AR(1)
-         ``σ _s``: standard deviation innovation of the idiosyncratic productivity shock s
+         β: discount rate 
+         ρ: exit probability
+         α: curvature of the production function (power on capital stock) 
+         θ: collaterazibility (if θ=0 there is no borrowing in the economy)
+         δ_n: depreciation rate of new capital
+         δ_u: depreciation rate of old capital
+         γ: measure of first cohort of firms entering the economy
+         ρ_s: persistence idiosyncratic productivity shock s ~ AR(1)
+         σ _s: standard deviation innovation of the idiosyncratic productivity shock s
          s_grid: grid for the idiosyncratic productivity shock s 
          Ps: probability transition matrix (will follow form Rouwenhorst method)
          w0: initial net worth for new entrants
          a: elasticity of output with respect to capital
-         ``ϵ``: CES elasticity of substitution
-         ``χ0``: Cost of raising equity parameters
-         ``χ1``: Cost of raising equity parameters
+         ϵ: CES elasticity of substitution
+         χ0: Cost of raising equity parameters
+         χ1: Cost of raising equity parameters
 
     Then, we define a set of functions based on these parameters.
-    - ``f(k) = Par.A * k^(Par.α)`` : this is a standard production function. It takes one input (capital stock k) and uses two of the parameters (the technology
-    parameter A and the capital share of the production function ``\alpha`` to compute the production output)
-    - ``fk(k) = Par.α * Par.A * k^(Par.α - 1)``: this is the first derivative of the production function, with respect to the capital stock 
+    - f(k) = Par.A * k^(Par.α) : this is a standard production function. It takes one input (capital stock k) and uses two of the parameters (the technology
+    parameter A and the capital share of the production function α to compute the production output)
+    - fk(k) = Par.α * Par.A * k^(Par.α - 1): this is the first derivative of the production function, with respect to the capital stock 
     which is the only input of the production function
-    - ``fkk(k) = Par.α * Par.A * (Par.α - 1) * k^(Par.α - 2)``: second derivative of the production function with repect to the capital stock
-    - ``fkinv(fk) = (fk / (Par.α * Par.A))^(1 / (Par.α - 1))`` : inverse of the derivative function, useful for policy function iteration, the ouput is the
+    - fkk(k) = Par.α * Par.A * (Par.α - 1) * k^(Par.α - 2): second derivative of the production function with repect to the capital stock
+    - fkinv(fk) = (fk / (Par.α * Par.A))^(1 / (Par.α - 1)) : inverse of the derivative function, useful for policy function iteration, the ouput is the
     capital stock 
-    - ``g0(k_n, k_o) = Par.a^(1 / Par.α) * k_n .^((Par.ϵ - 1) / Par.ϵ) + (1 - Par.a)^(1 / Par.ϵ) * (Par.γ .* k_o) .^((Par.ϵ - 1) / Par.ϵ):``
+    - g0(k_n, k_o) = Par.a^(1 / Par.α) * k_n .^((Par.ϵ - 1) / Par.ϵ) + (1 - Par.a)^(1 / Par.ϵ) * (Par.γ .* k_o) .^((Par.ϵ - 1) / Par.ϵ):
     computes the constant elasticity of substitution bundle for new and old capital for the production function with stocks of old and new capital as inputs
-    - ``g(k_n, k_o) = g0(k_n, k_o) .^(Par.ϵ / (Par.ϵ - 1))`` : this is the policy function which is an investment decision. Taking as inputs the old and new capital
+    - g(k_n, k_o) = g0(k_n, k_o) .^(Par.ϵ / (Par.ϵ - 1)) : this is the policy function which is an investment decision. Taking as inputs the old and new capital
     stocks, it gives as output the optimal amount of new capital to purchase at the next period
     - gn(k_n, k_o) = Par.a^(1 / Par.ϵ) * k_n .^((Par.ϵ - 1) / Par.ϵ - 1) * g0(k_n, k_o) .^(Par.ϵ / (Par.ϵ - 1) - 1) : 
     this is the derivative of the policy function with repect to the new capital, i.e. the marginal effect of investing in new capital on total capital in production
-    - ``go(k_n, k_o) = Par.γ * (1 - Par.a)^(1 / Par.ϵ) * (Par.γ * k_o) .^((Par.ϵ - 1) / Par.ϵ - 1) * g0(k_n, k_o) .^(Par.ϵ / (Par.ϵ - 1) - 1)``:
+    - go(k_n, k_o) = Par.γ * (1 - Par.a)^(1 / Par.ϵ) * (Par.γ * k_o) .^((Par.ϵ - 1) / Par.ϵ - 1) * g0(k_n, k_o) .^(Par.ϵ / (Par.ϵ - 1) - 1):
     this is the derivative of the policy function with repect to the old capital, i.e. the marginal effect of investing in old capital on total capital in production
 
     We build a dictionary that contains both functions that we previously built and the parameters that enter these functions
@@ -103,25 +103,25 @@ using Distributions, NLsolve, Optim, QuantEcon, Plots
             :f => f,
             :fk => fk,
             :fkk => fkk,
-            :``ϵ => Par.ϵ``,
+            :ϵ => Par.ϵ,
             :a => Par.a,
-            :``γ => Par.γ``,
+            :γ => Par.γ,
             :g => g,
             :gn => gn,
             :go => go
         )
 
         Then,  new parameters:
-        ``ξ_grid1`` : only useful for the competitive equilibrium
-        ``ξpr_grid0`` : only useful for the competitive equilibrium
+        ξ_grid1 : only useful for the competitive equilibrium
+        ξpr_grid0 : only useful for the competitive equilibrium
         kU : matrix that gives values of old capital on the path to first best
         kN : matrix that gives values of new capital on the path to first best
         qstar : first-best valuation of old capital  
         damp : dampening parameter 
-        ``diff_ξ`` : only useful for the competitive equilibrium
-        ``tol_ξ`` : tolerance level when looking for the optimal price
+        diff_ξ : only useful for the competitive equilibrium
+        tol_ξ : tolerance level when looking for the optimal price
         tol_q : tolerance level when looking for the optimal price
-        ``maxiter_ξ`` : only useful for the competitive equilibrium
+        maxiter_ξ : only useful for the competitive equilibrium
         maxiter_q : maximum number of iterations when computing the optimal price
 
         Again, we define a new set of parameters which will be our initial parameters, these are the one used originally by the authors of the paper as these parameters
