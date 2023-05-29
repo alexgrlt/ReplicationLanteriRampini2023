@@ -146,7 +146,7 @@ Fun = Dict(
 
 # init parameters with same values as authors (fastens the convergence process)
 #cd("C:/Users/repo_path/src")
-vars = matread("cali_ce.mat") 
+vars = matread("src/cali_ce.mat") 
 
 """
 We define a new set of parameters:
