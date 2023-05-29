@@ -1,6 +1,4 @@
 
-
-
 function rouwen(N::Int,μ::Float64,σ::Float64,ρ::Float64)
     
     σz = σ / sqrt(1-ρ^2)
