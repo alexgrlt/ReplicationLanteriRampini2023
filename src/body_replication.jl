@@ -61,7 +61,7 @@ using Distributions, NLsolve, Optim, QuantEcon, Plots
     @doc raw"""
         This offers a precise documentation of the function run_model() by describing step by step what happens when someone runs the function.
 
-    First, We build a structure with the following parameters given as inputs for the model.
+        First, We build a structure with the following parameters given as inputs for the model.
             A: technology/productivity parameter on the production function 
              ``\beta``: discount rate 
              ``\rho``: exit probability
@@ -69,7 +69,7 @@ using Distributions, NLsolve, Optim, QuantEcon, Plots
              ``\theta``: collaterazibility (if θ=0 there is no borrowing in the economy)
              ``\delta_n``: depreciation rate of new capital
              ``\delta_u``: depreciation rate of old capital
-             ``\gamma: measure of first cohort of firms entering the economy
+             ``\gamma``: measure of first cohort of firms entering the economy
              ``\rho_s``: persistence idiosyncratic productivity shock s ~ AR(1)
              ``\sigma_s``: standard deviation innovation of the idiosyncratic productivity shock s
              s_grid: grid for the idiosyncratic productivity shock s 
@@ -132,7 +132,7 @@ using Distributions, NLsolve, Optim, QuantEcon, Plots
             kU = kU0
             kN = kN0
 
-    Finally, we set these parameters at their initial value before running the loop around prices to find optimal prices
+        Finally, we set these parameters at their initial value before running the loop around prices to find optimal prices
                 xd : will be the distance
                 iter_q : will defini the number of iterations already done inside the loop
                 q1 : initial minimum price value
