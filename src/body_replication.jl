@@ -59,27 +59,26 @@ using Distributions, NLsolve, Optim, QuantEcon, Plots
 
 
     @doc raw"""
-    This offers a precise documentation of the function run_model() by describing step by step what happens when someone runs the function.
+        This offers a precise documentation of the function run_model() by describing step by step what happens when someone runs the function.
 
     First, We build a structure with the following parameters given as inputs for the model.
-        - A: technology/productivity parameter on the production function 
-        - ``\beta``: discount rate 
-        - ``\rho``: exit probability
-        - ``\alpha``: curvature of the production function (power on capital stock) 
-        - ``\theta``: collaterazibility (if θ=0 there is no borrowing in the economy)
-        - ``\delta_n``: depreciation rate of new capital
-        - ``\delta_u``: depreciation rate of old capital
-        - ``\gamma: measure of first cohort of firms entering the economy
-        - ``\rho_s``: persistence idiosyncratic productivity shock s ~ AR(1)
-        - ``\sigma_s``: standard deviation innovation of the idiosyncratic productivity shock s
-        - s_grid: grid for the idiosyncratic productivity shock s 
-        - Ps: probability transition matrix (will follow form Rouwenhorst method)
-        - w0: initial net worth for new entrants
-        - a: elasticity of output with respect to capital
-        - ``\epsilon``: CES elasticity of substitution
-        - ``\chi0``: Cost of raising equity parameters
-        - ``\chi1``: Cost of raising equity parameters
-
+            A: technology/productivity parameter on the production function 
+             ``\beta``: discount rate 
+             ``\rho``: exit probability
+             ``\alpha``: curvature of the production function (power on capital stock) 
+             ``\theta``: collaterazibility (if θ=0 there is no borrowing in the economy)
+             ``\delta_n``: depreciation rate of new capital
+             ``\delta_u``: depreciation rate of old capital
+             ``\gamma: measure of first cohort of firms entering the economy
+             ``\rho_s``: persistence idiosyncratic productivity shock s ~ AR(1)
+             ``\sigma_s``: standard deviation innovation of the idiosyncratic productivity shock s
+             s_grid: grid for the idiosyncratic productivity shock s 
+             Ps: probability transition matrix (will follow form Rouwenhorst method)
+             w0: initial net worth for new entrants
+             a: elasticity of output with respect to capital
+             ``\epsilon``: CES elasticity of substitution
+             ``\chi0``: Cost of raising equity parameters
+             ``\chi1``: Cost of raising equity parameters
 
         Then, we define a set of functions based on these parameters.
         - ``f(k) = Par.A * k^(Par.\alpha)`` : this is a standard production function. It takes one input (capital stock k) and uses two of the parameters (the technology
@@ -133,17 +132,17 @@ using Distributions, NLsolve, Optim, QuantEcon, Plots
             kU = kU0
             kN = kN0
 
-            Finally, we set these parameters at their initial value before running the loop around prices to find optimal prices
-    xd : will be the distance
-    iter_q : will defini the number of iterations already done inside the loop
-    q1 : initial minimum price value
-    q2 : initial maximum price value
-    kN_fb : vector of new capital values. There are two colums to signify the levels with each realization of the idiosyncratic shock.
-    kU_fb : vector of old capital values where (again) each column represent the realizations of the shock. 
-    q_vec : initital price vector for old capital, will give the vector of prices for old capital obtained through the iteration loop
-    q3 : init price value
+    Finally, we set these parameters at their initial value before running the loop around prices to find optimal prices
+                xd : will be the distance
+                iter_q : will defini the number of iterations already done inside the loop
+                q1 : initial minimum price value
+                q2 : initial maximum price value
+                kN_fb : vector of new capital values. There are two colums to signify the levels with each realization of the idiosyncratic shock.
+                kU_fb : vector of old capital values where (again) each column represent the realizations of the shock. 
+                q_vec : initital price vector for old capital, will give the vector of prices for old capital obtained through the iteration loop
+                q3 : init price value
 
-    The loop aims to find the optimal price for old capital using policy function iteration. 
+        The loop aims to find the optimal price for old capital using policy function iteration. 
         The idea is to find the price such as demand and supply for the old capital are equal.
         To obtain such values, we use the getDS_shocks_fb function from the Policy_Func_Iterations file.
     
