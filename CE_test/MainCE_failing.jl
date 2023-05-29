@@ -2,6 +2,7 @@
 This code aims to replicate the competitive equilibrium results of the paper. 
 It relies on  the function getDS_shocks that does not work with NLsolve as it does not converge.
     We tried to use JuMP and Ipopt in getDS_shocks1 but it is way too long (15h+) and lead to wrong answer. 
+We include it here for completeness. It relies on similar steps as the first best and the code is commented along.
 =#
 
 
