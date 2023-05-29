@@ -32,7 +32,7 @@ getDS_shocks_fb(Ps::Matrix,s_grid::Array, kN_fb::Array,kU_fb::Array,q0::Number)
 
 This function uses NLsolve to solve for the FOC found with ``fb\_dyn\_unc`` and deduce the level of old capital supplied and demanded optimally by firms of a given cohort. 
 
-Its arguments are: ``Ps``, the transition matrix of the idiosyncratic shock found usinf Rouwenhorst method; ``s\_grid``, the exponential grid of the shock; ``kN\_fb`` and ``kU\_fb`` the levels of new and old capital, and ``q0`` an initial price of capital. 
+Its arguments are: ``Ps``, the transition matrix of the idiosyncratic shock found using Rouwenhorst method; ``s\_grid``, the exponential grid of the shock; ``kN\_fb`` and ``kU\_fb`` the levels of new and old capital, and ``q0`` an initial price of capital. 
 It returns a tuple with the demand and the supply of old capital. 
 
 """
