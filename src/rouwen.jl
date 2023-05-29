@@ -4,7 +4,7 @@ Discretization method for a AR(1) process of the form ``z_{t+1} = \mu + \rho z_{
 It must be defined as:  rouwen(N:: number nodes, ``\mu``:: mean of the process, ``\sigma``:: sd of the innovation, ``\rho``:: persistence).
 N must be an integer and all other inputs are Floats. The paper considers N=2.
 
-Returns a tuple with the discretized grid for the realizations of the shock ``Z`` (a vector of size ``N``), and its transition matrix ``\Pi`` (size ``NxN``).
+Returns a tuple with the discretized grid for the realizations of the shock ``Z`` (a vector of size ``N``), and its transition matrix ``\Pi`` (size ``N \times N``).
 """
 function rouwen(N::Int,μ::Float64,σ::Float64,ρ::Float64)
     
