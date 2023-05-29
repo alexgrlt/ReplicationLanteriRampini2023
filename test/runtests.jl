@@ -3,7 +3,7 @@ using Test
 
 # verify that optimal values are close enough to what they should be
 @testset "Check results model" begin
-    kN_fb, kU_fb, k_fb = ReplicationLanteriRampini2023.run_model()
+    w_grid, kN_fb, kU_fb, k_fb = ReplicationLanteriRampini2023.run_model()
     @test isapprox(kN_fb[1,1], 16.0846; rtol=1E-2)
     @test isapprox(kU_fb[1,1], 16.0846; rtol=1E-2)
     @test isapprox(kU_fb[1,2], 28.8805; rtol=1E-2)

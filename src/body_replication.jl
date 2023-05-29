@@ -337,34 +337,5 @@ function run_model()
     kU_fb = ones(w_n,1).*kU_fb
     k_fb = ones(w_n,1).*k_fb
 
-    """
-    Finally, we simply plot paths followed by new capital values, old capital values and capital in the first-best situation.
-    """
-
-
-    # Plot for capital both old and new
-    l = @layout [a;b ;  c]
-
-
-    p1 = plot(w_grid, kN_fb[:,1], linewidth=2, label = "Low-state")
-    plot!(p1,w_grid, kN_fb[:,2], linewidth=2, label = "High-state")
-    xlabel!(p1,"w")
-    ylabel!(p1,"kN")
-
-
-    p2 = plot(w_grid, kU_fb[:,1], linewidth=2,label = "Low-state")
-    plot!(p2,w_grid, kU_fb[:,2], linewidth=2,label = "High-state")
-    xlabel!(p2,"w")
-    ylabel!(p2,"kU")
-
-
-    p3 = plot(w_grid, k_fb[:,1], linewidth=2, label = "Low-state")
-    plot!(p3,w_grid, k_fb[:,2], linewidth=2, label = "High-state")
-    xlabel!(p3,"w")
-    ylabel!(p3,"k")
-
-
-    plot(p1,p2,p3,layout = l)
-
-    return (kN_fb,kU_fb,k_fb)
+    return (w_grid, kN_fb,kU_fb,k_fb)
 end
