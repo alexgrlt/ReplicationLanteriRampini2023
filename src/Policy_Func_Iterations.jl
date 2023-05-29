@@ -1,8 +1,10 @@
-"""
+@doc raw"""
 fb_dyn_unc(xx::Array{Float64}, Par::Parameters, Fun::Dict, q::Real, m::Any)
-Returns an array zz with the first-order conditions for new and old capital at the optimal allocation (see equations 38 and 39 in the paper) that will be used in the policy function iteration. The expression of these FOC is given explicitly as in the Matlab replication files. 
-The inputs correspond to an array with some level of new and old capital (xx), the parameter structure defined before with the associated dictionary with functions at the core of the setup (notably the policy function with its derivatives and production function with its derivatives), a price for capital q and another parameter m.
-In the next function (getDS_shocks_fb), m is defined as the matrix of expected payoffs.
+
+Returns an array ``zz`` with the first-order conditions for new and old capital at the optimal allocation (see equations 38 and 39 in the paper) that will be used in the policy function iteration. The expression of these FOC is given explicitly as in the Matlab replication files. 
+
+The inputs correspond to an array with some level of new and old capital (``xx``), the parameter structure defined before with the associated dictionary with functions at the core of the setup (notably the policy function with its derivatives and production function with its derivatives), a price for capital ``q`` and another parameter ``m``.
+In the next function (getDS_shocks_fb), ``m`` is defined as the matrix of expected payoffs.
 """
 function fb_dyn_unc(xx::Array{Float64}, Par::Parameters, Fun::Dict, q::Real, m::Any)
     
@@ -25,10 +27,12 @@ function fb_dyn_unc(xx::Array{Float64}, Par::Parameters, Fun::Dict, q::Real, m::
     return zz
 end
 
-"""
-getDS_shocks_fb(Ps::Matrix,s_grid, kN_fb,kU_fb,q0) 
+@doc raw"""
+getDS_shocks_fb(Ps::Matrix,s_grid::Array, kN_fb,kU_fb,q0) 
+
 This function uses NLsolve to solve for the FOC found with fb_dyn_unc ans deduce the level of old capital supplied and demanded optimally by firms of a given cohort. 
-Its arguments are: Ps, the transition matrix of the idiosyncratic shock found usinf Rouwenhorst method; s_grid, theexponential grid of the shock; kN_fb and kU_fb the levels of new and old capital, and q0 an initial price of capital. 
+
+Its arguments are: ``Ps``, the transition matrix of the idiosyncratic shock found usinf Rouwenhorst method; ``s\_grid``, the exponential grid of the shock; ``kN\_fb`` and ``kU\_fb`` the levels of new and old capital, and ``q0`` an initial price of capital. 
 It returns a tuple with the demand and the supply of old capital. 
 
 """
