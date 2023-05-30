@@ -3,6 +3,9 @@ The package built in this repository replicates the first best results of "Const
 
 The paper is about understanding inefficiencies in the new and old capital markets. One of the main insights from the model (unreplicated here -- see failing_code folder under src to find a tentative to replicate it) is that the equilibrium price of old capital is too high because distributive externalities (due to financial constraints of buyers of old capital) exceed collateral externalities (due to the effects of the resale price of capital on collateral constraints of firms).
 
+## Getting started with the replication
+
+The main function from our package can be called with ReplicationLanteriRampini2023.run_model(), it replicates the first best results of the paper and outputs capital levels (both new, old and their combination). However, because this output is not easy to visualize, one can call a function ReplicationLanteriRampini2023.plot_results(), which builds 3 plots for these levels of capital. The plots for this first best result are not impressive: they only highlight that absent constraints, one should have as much old and new capital (since none is more productive than the other), and that capital should depend on being on the low vs high state but *not* on the current worth of the firm.
  
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://alexgrlt.github.io/ReplicationLanteriRampini2023.jl/stable/)
