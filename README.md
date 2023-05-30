@@ -5,7 +5,7 @@ The paper is about understanding inefficiencies in the new and old capital marke
 
 ## Getting started with the replication
 
-The main function from our package can be called with ReplicationLanteriRampini2023.run_model(), it replicates the first best results of the paper and outputs capital levels (both new, old and their combination). However, because this output is not easy to visualize, one can call a function ReplicationLanteriRampini2023.plot_results(), which builds 3 plots for these levels of capital. The plots for this first best result are not impressive: they only highlight that absent constraints, one should have as much old and new capital (since none is more productive than the other), and that capital should depend on being on the low vs high state but *not* on the current worth of the firm.
+The main function from our package can be called with ReplicationLanteriRampini2023.run_model(), it replicates the first best results of the paper and outputs capital levels (both new, old and their combination). However, because this output is not easy to visualize, one can call a function ReplicationLanteriRampini2023.plot_results(), which builds 3 plots for these levels of capital. The plots for this first best result are not impressive: they only highlight that absent constraints, one should have equal amounts of old and new capital (since none is more productive than the other), and that capital should depend on being on the low vs high state but *not* on the current worth of the firm. The competitive equilibrium would be more interesting to see, but is currently not replicated.
 
 In short, we recommend running: 
 
